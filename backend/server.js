@@ -1,23 +1,27 @@
-const express = require("express");
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import productRouter from "./routes/productsRoutes.js";
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 const app = express();
-const products = require("./data/products");
-const cors = require("cors");
-app.use(cors());
+const port = process.env.PORT || 5000;
+dotenv.config();
 
+connectDB();
+app.use(cors());
 app.use(express.json());
+
+app.use("/api/products", productRouter);
 
 app.get("/", (req, res) => {
   res.send("welcome to homepage");
 });
-app.get("/api/products", (req, res) => {
-  res.json(products);
-});
-app.get("/api/products/:id", (req, res) => {
-  const id = req.params.id;
-  const singleProduct = products.find((p) => p._id === id);
-  res.send(singleProduct);
-});
+
+app.use(notFound);
+
+app.use(errorHandler);
 
 app.listen(5000, () => {
-  console.log(`server is listening on port 5000`);
+  console.log(`server is running in ${process.env.NODE_ENV} on port ${port}`);
 });
