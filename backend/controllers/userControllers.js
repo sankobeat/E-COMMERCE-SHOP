@@ -24,20 +24,6 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc get user profile
-// @route POST api/users/profile
-// @access Private
-
-const getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findOne(req.user._id);
-  res.json({
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    isAdmin: user.isAdmin,
-  });
-});
-
 // @desc Register User
 // @route POST api/users/register
 // @access PRIVATE
@@ -67,4 +53,44 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, getUserProfile, registerUser };
+// @desc get user profile
+// @route POST api/users/profile
+// @access Private
+
+const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findOne(req.user._id);
+  res.json({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    isAdmin: user.isAdmin,
+  });
+});
+
+// @desc update user profile
+// @route PUT api/users/profile
+// @access Private
+
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findOne(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      token: generateToken(updatedUser._id),
+    });
+  }
+});
+
+export { authUser, getUserProfile, registerUser, updateUserProfile };

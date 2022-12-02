@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import productRouter from "./routes/productsRoutes.js";
 import userRouter from "./routes/userRoute.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/products", productRouter);
 app.use("/api/users", userRouter);
+app.use("/api/orders", orderRoutes);
 
 app.get("/", (req, res) => {
   res.send("welcome to homepage");

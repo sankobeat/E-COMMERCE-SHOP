@@ -6,9 +6,13 @@ import {
   authUser,
   getUserProfile,
   registerUser,
+  updateUserProfile,
 } from "../controllers/userControllers.js";
 
 router.post("/login", authUser);
-router.route("/profile").get(protect, getUserProfile);
+router
+  .route("/profile")
+  .get(protect, getUserProfile)
+  .put(protect, updateUserProfile);
 router.route("/register").post(registerUser);
 export default router;
