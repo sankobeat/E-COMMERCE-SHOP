@@ -23,11 +23,9 @@ const PlaceOrderScreen = () => {
 
   cart.taxPrice = Number((0.015 * cart.ItemsPrice).toFixed(2));
 
-  cart.totalPrice = (
-    cart.ItemsPrice +
-    cart.shippingPrice +
-    cart.taxPrice
-  ).toFixed(2);
+  cart.totalPrice = Number(
+    (cart.ItemsPrice + cart.shippingPrice + cart.taxPrice).toFixed(2)
+  );
 
   const orderCreate = useSelector((state) => state.orderCreate);
 
@@ -35,7 +33,7 @@ const PlaceOrderScreen = () => {
 
   useEffect(() => {
     if (success) {
-      history.push(`/order/${order._id}`);
+      history.push(`/orders/${order._id}`);
     }
   }, [history, success]);
 

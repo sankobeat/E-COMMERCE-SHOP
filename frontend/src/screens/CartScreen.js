@@ -14,6 +14,7 @@ import {
   Card,
 } from "react-bootstrap";
 import { addToCart, removeFromCart } from "../actions/cartActions";
+import axios from "axios";
 
 const CartScreen = ({ match, location, history }) => {
   const productID = match.params.id;
@@ -23,6 +24,7 @@ const CartScreen = ({ match, location, history }) => {
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
+
   useEffect(() => {
     if (productID) {
       dispatch(addToCart(productID, quantity));

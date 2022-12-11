@@ -35,7 +35,6 @@ const ProductScreen = ({ match, history }) => {
   const addToCartHandler = () => {
     history.push(`/cart/${match.params.id}?quantity=${quantity}`);
     // dispatch(addToCart(match.params.id, quantity));
-    console.log("first");
   };
 
   return (

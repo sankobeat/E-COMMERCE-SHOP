@@ -1,12 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { getUserDetails, updateUserProfile } from "../actions/userActions";
 import { useHistory } from "react-router-dom";
-
+import { getMyOrders } from "../actions/orderActions";
+import { Link } from "react-router-dom";
 const ProfileScreen = ({ location }) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -25,6 +26,9 @@ const ProfileScreen = ({ location }) => {
   // get success from userDetails
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { success } = userUpdateProfile;
+  // get oders state
+  const orderList = useSelector((state) => state.orderList);
+  const { orders, loading: orderLoading, error: orderError } = orderList;
   // redirect if user is logged in
   const redirect = location.search ? location.search.split("=")[1] : "/";
   //before rendering component it check if user is logged in & if it is logged in it will redirect him
@@ -32,15 +36,16 @@ const ProfileScreen = ({ location }) => {
     if (!userInfo) {
       history.push("/login");
     } else {
-      if (!user.name) {
-        dispatch(getUserDetails("profile"));
+      if (!user?.name) {
+        dispatch(getUserDetails());
+        dispatch(getMyOrders());
       } else {
-        console.log(user.name, user.email);
         setName(user.name);
         setEmail(user.email);
       }
     }
-  }, [dispatch, userInfo, redirect, history, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo, redirect, history, user]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -104,6 +109,51 @@ const ProfileScreen = ({ location }) => {
       </Col>
       <Col md={9}>
         <h1>orders</h1>
+        {orderLoading ? (
+          <Loader />
+        ) : orderError ? (
+          <Message variant="danger">{orderError}</Message>
+        ) : (
+          <Table striped bordered hover responsive className="table-sm">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>DATE</th>
+                <th>TOTAL</th>
+                <th>PAID</th>
+                <th>DELIVERED</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders?.map((order) => (
+                <tr key={order._id}>
+                  <td>{order._id}</td>
+                  <td>{order.createdAt.substring(0, 10)}</td>
+                  <td>{order.totalPrice}</td>
+                  <td>
+                    {order.isPaid ? (
+                      order.paidAt.substring(0, 10)
+                    ) : (
+                      <i className="fas fa-times" style={{ color: "red" }}></i>
+                    )}
+                  </td>
+                  <td>
+                    {order.isDelivered ? (
+                      order.deliveredAt.substring(0, 10)
+                    ) : (
+                      <i className="fas fa-times" style={{ color: "red" }}></i>
+                    )}
+                  </td>
+                  <td>
+                    <Link to={`/orders/${order._id}`}>
+                      <Button variant="light">DETAILS</Button>
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Col>
     </Row>
   );

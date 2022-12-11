@@ -6,6 +6,17 @@ import {
   PRODUCT_DETAILS_SUCCESS,
   PRODUCT_DETAILS_FAILD,
   PRODUCT_CLEAR_DETAILS,
+  PRODUCT_DELETE_REQUEST,
+  PRODUCT_DELETE_SUCCESS,
+  PRODUCT_DELETE_FAILD,
+  PRODUCT_CREATE_REQUEST,
+  PRODUCT_CREATE_SUCCESS,
+  PRODUCT_CREATE_FAILD,
+  PRODUCT_CREATE_RESET,
+  PRODUCT_UPDATE_FAILD,
+  PRODUCT_UPDATE_SUCCESS,
+  PRODUCT_UPDATE_REQUEST,
+  PRODUCT_UPDATE_RESET,
 } from "../constatns/productConstants";
 
 export const productListReducer = (state = { products: [] }, action) => {
@@ -36,6 +47,49 @@ export const productDetailsReducer = (
     case PRODUCT_CLEAR_DETAILS:
       return { loading: true, product: {} };
 
+    default:
+      return state;
+  }
+};
+
+export const productDeleteReducer = (state = { message: "" }, action) => {
+  switch (action.type) {
+    case PRODUCT_DELETE_REQUEST:
+      return { loading: true };
+    case PRODUCT_DELETE_SUCCESS:
+      return { loading: false, sucess: true, message: action.payload };
+    case PRODUCT_DELETE_FAILD:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const createProductReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PRODUCT_CREATE_REQUEST:
+      return { loading: true, success: false };
+    case PRODUCT_CREATE_SUCCESS:
+      return { loading: false, success: true, createdProduct: action.payload };
+    case PRODUCT_CREATE_FAILD:
+      return { loading: false, error: action.payload };
+    case PRODUCT_CREATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const updateProductReducer = (state = { product: {} }, action) => {
+  switch (action.type) {
+    case PRODUCT_UPDATE_REQUEST:
+      return { loading: true, success: false };
+    case PRODUCT_UPDATE_SUCCESS:
+      return { loading: false, success: true, product: action.payload };
+    case PRODUCT_UPDATE_FAILD:
+      return { loading: false, error: action.payload };
+    case PRODUCT_UPDATE_RESET:
+      return {};
     default:
       return state;
   }

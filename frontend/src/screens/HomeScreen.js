@@ -5,8 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { listProduct } from "../actions/productActions";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
+import axios from "axios";
+
 const HomeScreen = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(listProduct());
   }, [dispatch]);
