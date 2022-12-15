@@ -44,7 +44,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 //@access PRIVATE
 
 const getAllOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({});
+  const orders = await Order.find({}).populate("user", "id name");
   res.status(200).json(orders);
 });
 
@@ -101,10 +101,26 @@ const getUserOrder = asyncHandler(async (req, res) => {
   }
 });
 
+const markOrderAsDelivered = asyncHandler(async (req, res) => {
+  const orderId = req.params.id;
+  const order = await Order.findById(orderId);
+
+  if (order) {
+    order.isDelivered = true;
+    const updatedOrder = order.save();
+    res.status(200);
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+});
+
 export {
   addOrderItems,
   getAllOrders,
   getSingleOrder,
   updateOrderToPaid,
   getUserOrder,
+  markOrderAsDelivered,
 };

@@ -9,7 +9,9 @@ import {
 import { Link } from "react-router-dom";
 import { logout } from "../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
+import { Route } from "react-router-dom";
 import { useEffect } from "react";
+import SearchBar from "./SearchBar";
 
 const Header = () => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -29,6 +31,8 @@ const Header = () => {
           </Link>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
+            <Route render={({ history }) => <SearchBar history={history} />} />
+
             <Nav className="ms-auto">
               <Nav.Link stlye={{ display: "flex", justifyContent: "center" }}>
                 <Link to="/cart" style={{ color: "white" }}>
